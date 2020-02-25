@@ -10,8 +10,10 @@ class RootIndex extends React.Component {
   render() {
     const siteTitle = get(this, 'props.data.site.siteMetadata.title')
     const posts = get(this, 'props.data.allContentfulBlogPost.edges')
+    const pageSections = get(this, 'props.data.allContentfulPageSection.edges')
     const [author] = get(this, 'props.data.allContentfulPerson.edges')
-
+    console.log(pageSections)
+    console.log(posts)
     return (
       <Layout location={this.props.location}>
         <div style={{ background: '#fff' }}>
@@ -19,13 +21,9 @@ class RootIndex extends React.Component {
           <Hero data={author.node} />
           <div className="wrapper">
             <h2 className="section-headline">Recent articles of note</h2>
-            <ul className="article-list">
-              {posts.map(({ node }) => {
-                return (
-                  <li key={node.slug}>
-                    <ArticlePreview article={node} />
-                  </li>
-                )
+            <ul>
+              {pageSections.map(({ node }) => {
+                return <li key={node.id}>{node.otherText}</li>
               })}
             </ul>
           </div>
@@ -84,6 +82,14 @@ export const pageQuery = graphql`
               ...GatsbyContentfulFluid_tracedSVG
             }
           }
+        }
+      }
+    }
+    allContentfulPageSection {
+      edges {
+        node {
+          pageSectionText
+          otherText
         }
       }
     }
